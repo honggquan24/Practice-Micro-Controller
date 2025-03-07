@@ -1,0 +1,22 @@
+--cpu Cortex-M3
+"bt\startup_stm32f207xx.o"
+"bt\main.o"
+"bt\stm32f2xx_it.o"
+"bt\stm32f2xx_hal_msp.o"
+"bt\stm32f2xx_hal.o"
+"bt\stm32f2xx_hal_rcc.o"
+"bt\stm32f2xx_hal_rcc_ex.o"
+"bt\stm32f2xx_hal_cortex.o"
+"bt\stm32f2xx_hal_flash.o"
+"bt\stm32f2xx_hal_flash_ex.o"
+"bt\stm32f2xx_hal_pwr.o"
+"bt\stm32f2xx_hal_pwr_ex.o"
+"bt\stm32f2xx_hal_gpio.o"
+"bt\stm32f2xx_hal_dma.o"
+"bt\stm32f2xx_hal_dma_ex.o"
+"bt\stm32f2xx_hal_exti.o"
+"bt\system_stm32f2xx.o"
+--strict --scatter "BT\BT.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "BT.map" -o BT\BT.axf
