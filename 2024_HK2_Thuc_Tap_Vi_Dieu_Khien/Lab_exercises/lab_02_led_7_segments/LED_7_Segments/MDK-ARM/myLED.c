@@ -78,26 +78,35 @@ static uint8_t LED_decode_char(uint8_t ch) {
 
 void LED_putstring(uint8_t *s) {
     // Position masks for up to 5 digits: k5, k4, k3, k2, k1
-    // (Each value will be shifted into the high byte)
     uint8_t pos[5] = {0x08, 0x10, 0x20, 0x40, 0x80};
-		// LED_putstring((uint8_t *)"AAAAA");
-    for (int i = 0; i < 5; i++) {
+
+    static uint32_t last_refresh_time = 0;  // Last time a digit was updated
+    static uint8_t current_digit = 0;       // Current digit index (0-4)
+
+    if (HAL_GetTick() - last_refresh_time >= 10) { // Refresh every 5ms (adjust as needed)
+        last_refresh_time = HAL_GetTick();  // Update last refresh time
+
         uint8_t code;
         // If we've reached the end of the string, turn off this digit
-        if (s[i] == '\0') {
+        if (s[current_digit] == '\0') {
             code = LED_OFF;
         } else {
             // Decode the character into a 7-segment code
-            code = LED_decode_char(s[i]);
+            code = LED_decode_char(s[current_digit]);
         }
-        // pos[i] -> shifted into the high byte, 'code' stays in the low byte
-        uint16_t d16 = ((uint16_t)pos[i] << 8) | code;
-        
+
+        // Construct 16-bit data: High byte for position, Low byte for segment data
+        uint16_t d16 = ((uint16_t)pos[current_digit] << 8) | code;
+
         // Send the 16-bit value to the shift registers
         Data16_put(d16);
 
-        // Small delay to stabilize multiplexed display
-        HAL_Delay(2);
+        // Move to the next digit
+        current_digit++;
+        if (current_digit >= 10) {
+            current_digit = 0;  // Reset to the first digit after cycling through all
+        }
     }
 }
+
 

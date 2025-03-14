@@ -43,6 +43,7 @@ void LED_putstring(uint8_t *s);
 #define P   0x67
 #define S   0xCB
 #define U   0xAD
+#define hyphen 0x10
 #define LED_OFF 0x00
 
 #endif // MYLED_H
