@@ -96,28 +96,8 @@ int main(void)
   while (1)
   {
 		// Display "HELLO" on the 7-segment display
-        LED_putstring((uint8_t *)"HELLO");
-        HAL_Delay(20000);  // Keep display for 2 seconds
-
-        // Display "12345"
-        LED_putstring((uint8_t *)"12345");
-        HAL_Delay(20000); 
-
-        // Display "Err01" (simulate error code)
-        LED_putstring((uint8_t *)"Err01");
-        HAL_Delay(20000);  
-
-        // Display "A7SEG" (mix of letters and numbers)
-        LED_putstring((uint8_t *)"A7SEG");
-        HAL_Delay(20000);  
-
-        // Display "STM32"
-        LED_putstring((uint8_t *)"STM32");
-        HAL_Delay(20000);  
-
-        // Turn off all LEDs
-        LED_putstring((uint8_t *)"");
-        HAL_Delay(20000); 
+        LED_putstring((uint8_t *)"HELLE");
+				HAL_Delay(2000); 
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

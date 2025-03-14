@@ -79,7 +79,7 @@ static uint8_t LED_decode_char(uint8_t ch) {
 void LED_putstring(uint8_t *s) {
     // Position masks for up to 5 digits: k5, k4, k3, k2, k1
     // (Each value will be shifted into the high byte)
-    uint8_t pos[5] = { 16, 8, 4, 2, 1 };
+    uint8_t pos[5] = {0x08, 0x10, 0x20, 0x40, 0x80};
 
     for (int i = 0; i < 5; i++) {
         uint8_t code;
@@ -97,7 +97,7 @@ void LED_putstring(uint8_t *s) {
         Data16_put(d16);
 
         // Small delay to stabilize multiplexed display
-        HAL_Delay(1000);
+        HAL_Delay(2);
     }
 }
 
