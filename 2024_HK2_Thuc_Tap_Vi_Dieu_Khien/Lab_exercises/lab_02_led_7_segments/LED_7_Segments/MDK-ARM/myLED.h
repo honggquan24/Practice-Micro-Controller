@@ -12,18 +12,18 @@ void Data16_put(uint16_t d16);
 void LED_data(uint8_t n);
 
 /**
- * @brief  Decodes and displays the digit n on the 7-segment LED at position p.
- *         p = 0 : Turn off all LEDs.
- *         p = 1 : Display at position k1   (00000001).
- *         p = 2 : Display at position k2   (00000010).
- *         p = 4 : Display at position k3   (00000100).
- *         p = 8 : Display at position k4   (00001000).
- *         p = 16: Display at position k5   (00010000).
- *         p = 3 : Display at positions k1 and k2 (00000011).
- *         p = 7 : Display at positions k1, k2, and k3 (00000110).
- * @param  n: The digit (0-9) to display.
- * @param  p: The position mask.
- */
+* @brief  Decodes and displays the digit n on the 7-segment LED at position p.
+* p = 0 : Turn off all LEDs.
+* p = 1 : Display at position k1   (00000001).
+* p = 2 : Display at position k2   (00000010).
+* p = 4 : Display at position k3   (00000100).
+* p = 8 : Display at position k4   (00001000).
+* p = 16: Display at position k5   (00010000).
+* p = 3 : Display at positions k1 and k2 (00000011).
+* p = 7 : Display at positions k1, k2, and k3 (00000110).
+* @param  n: The digit (0-9) to display.
+* @param  p: The position mask.
+*/
 void LED_put(uint8_t n, uint8_t p);
 
 void LED_putstring(uint8_t *s);

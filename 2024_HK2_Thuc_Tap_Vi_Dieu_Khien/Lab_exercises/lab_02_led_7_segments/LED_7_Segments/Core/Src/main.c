@@ -18,10 +18,11 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "myLED.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "myLED.h"
+#include <stdio.h>
 
 /* USER CODE END Includes */
 
@@ -62,48 +63,75 @@ static void MX_GPIO_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
+
+
+#define P_ACTIVE GPIO_PIN_RESET  // Assuming active-low buttons
+
 int main(void)
 {
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
 
-  /* USER CODE BEGIN 1 */
+    uint32_t num_display = 12345;  // Start value
+    uint8_t auto_increment = 0;    // Flag for auto-increment mode
+    uint32_t last_increment_time = 0;  // Stores the last time auto-increment happened
 
-  /* USER CODE END 1 */
+    while (1)
+    {
+        // Convert num_display to a string
+        char str_num[6];  // 5 digits + null terminator
+        sprintf(str_num, "%05lu", num_display);  // Convert number to string with 5 digits
 
-  /* MCU Configuration--------------------------------------------------------*/
+        // Display the number on the 7-segment display
+        LED_putstring((uint8_t *)str_num);
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+        // Read button states
+        uint8_t P1 = HAL_GPIO_ReadPin(P1_GPIO_Port, P1_Pin);
+        uint8_t P2 = HAL_GPIO_ReadPin(P2_GPIO_Port, P2_Pin);
+        uint8_t P3 = HAL_GPIO_ReadPin(P3_GPIO_Port, P3_Pin);
+        uint8_t P4 = HAL_GPIO_ReadPin(P4_GPIO_Port, P4_Pin);
 
-  /* USER CODE BEGIN Init */
+        // P1: Increment number
+        if (P1 == P_ACTIVE) {
+            num_display++;
+            while (HAL_GPIO_ReadPin(P1_GPIO_Port, P1_Pin) == P_ACTIVE); // Wait for button release
+        }
 
-  /* USER CODE END Init */
+        // P2: Decrement number
+        if (P2 == P_ACTIVE) {
+            num_display--;
+            while (HAL_GPIO_ReadPin(P2_GPIO_Port, P2_Pin) == P_ACTIVE); // Wait for button release
+        }
 
-  /* Configure the system clock */
-  SystemClock_Config();
+        // P3: Reset to 12345
+        if (P3 == P_ACTIVE) {
+            num_display = 12345;
+            while (HAL_GPIO_ReadPin(P3_GPIO_Port, P3_Pin) == P_ACTIVE); // Wait for button release
+        }
 
-  /* USER CODE BEGIN SysInit */
+        // P4: Start/stop auto-increment mode
+        if (P4 == P_ACTIVE) {
+            auto_increment = !auto_increment;  // Toggle auto-increment mode
+            while (HAL_GPIO_ReadPin(P4_GPIO_Port, P4_Pin) == P_ACTIVE); // Wait for button release
+        }
 
-  /* USER CODE END SysInit */
+        // Auto-increment mode (non-blocking)
+        if (auto_increment && num_display < 99999) {
+            if (HAL_GetTick() - last_increment_time >= 1000) { // Check if 1 second has passed
+                num_display++;
+                last_increment_time = HAL_GetTick(); // Reset timer
+            }
+        }
 
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-		// Display "HELLO" on the 7-segment display
-        LED_putstring((uint8_t *)"HELLE");
-				HAL_Delay(2000); 
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+        // Prevent overflow (max 99999)
+        if (num_display > 99999) {
+            num_display = 99999;
+        }
+    }
 }
+
+
 
 /**
   * @brief System Clock Configuration
@@ -168,6 +196,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : P4_Pin P3_Pin P2_Pin P1_Pin */
+  GPIO_InitStruct.Pin = P4_Pin|P3_Pin|P2_Pin|P1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : SCK_Pin MOSI_Pin */

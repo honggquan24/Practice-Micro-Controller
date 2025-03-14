@@ -59,6 +59,14 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define RCL_Pin GPIO_PIN_2
 #define RCL_GPIO_Port GPIOE
+#define P4_Pin GPIO_PIN_8
+#define P4_GPIO_Port GPIOE
+#define P3_Pin GPIO_PIN_10
+#define P3_GPIO_Port GPIOE
+#define P2_Pin GPIO_PIN_12
+#define P2_GPIO_Port GPIOE
+#define P1_Pin GPIO_PIN_13
+#define P1_GPIO_Port GPIOE
 #define SCK_Pin GPIO_PIN_3
 #define SCK_GPIO_Port GPIOB
 #define MOSI_Pin GPIO_PIN_5
