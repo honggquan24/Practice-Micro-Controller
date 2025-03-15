@@ -67,6 +67,10 @@ void Error_Handler(void);
 #define P2_GPIO_Port GPIOE
 #define P1_Pin GPIO_PIN_13
 #define P1_GPIO_Port GPIOE
+#define D2_Pin GPIO_PIN_9
+#define D2_GPIO_Port GPIOC
+#define D1_Pin GPIO_PIN_8
+#define D1_GPIO_Port GPIOA
 #define SCK_Pin GPIO_PIN_3
 #define SCK_GPIO_Port GPIOB
 #define MOSI_Pin GPIO_PIN_5
