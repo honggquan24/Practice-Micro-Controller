@@ -64,46 +64,79 @@ static void MX_GPIO_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
-uint8_t hours = 14;  // Gi? ban d?u
-uint8_t minutes = 3; // Phút ban d?u
-uint8_t seconds = 5; // Giây ban d?u
-uint16_t previous_Time = 0; 
 
-// Hàm hi?n th? th?i gian lên LCD
-void DisplayTime(void) {
-    char timeString[16]; 
-    sprintf(timeString, "CLOCK: %02d:%02d:%02d", hours, minutes, seconds);
-    LCD_GotoXY(0, 0); // Ðua con tr? v? dòng d?u tiên
-    LCD_PutString((uint8_t *)timeString); // In chu?i ra LCD
+uint8_t hours = 14;  
+uint8_t minutes = 3; 
+uint8_t seconds = 5; 
+
+uint8_t auto_increment = GPIO_PIN_RESET; 
+uint32_t last_update_time = 0; 
+
+void DisplayTime() {
+	char timeString[16]; 
+	sprintf(timeString, "CLOCK: %02d:%02d:%02d", hours, minutes, seconds);
+	LCD_GotoXY(0, 0); 
+	LCD_PutString((uint8_t *)timeString);
 }
 
-// Hàm c?p nh?t th?i gian
 void UpdateTime(void) {
-		HAL_Delay(1000); 
-    seconds++;
-    if (seconds >= 60) {
-        seconds = 0;
-        minutes++;
-        if (minutes >= 60) {
-            minutes = 0;
-            hours++;
-            if (hours >= 24) {
-                hours = 0;
-            }
-        }
-    }
+	if (HAL_GetTick() - last_update_time >= 1000) {
+			last_update_time = HAL_GetTick(); 
+	}
+			
+	seconds++;
+	if (seconds >= 60) {
+			seconds = 0;
+			minutes++;
+			if (minutes >= 60) {
+					minutes = 0;
+					hours++;
+					if (hours >= 24) {
+							hours = 0;
+					}
+			}
+	}
+	DisplayTime();
 }
+
 
 int main(void) {
-    HAL_Init(); // Kh?i t?o HAL
-    SystemClock_Config(); // C?u hình xung nh?p h? th?ng
-    MX_GPIO_Init(); // Kh?i t?o GPIO
-    LCD_Init(); // Kh?i t?o LCD
+	HAL_Init(); 
+	SystemClock_Config(); 
+	MX_GPIO_Init(); 
+	LCD_Init(); 
 
-    while (1) {
-        DisplayTime(); // Hi?n th? th?i gian
-        UpdateTime(); // C?p nh?t th?i gian
-    }
+	while (1) {
+		uint8_t button_P1 = HAL_GPIO_ReadPin(P1_GPIO_Port, P1_Pin);
+		uint8_t button_P2 = HAL_GPIO_ReadPin(P2_GPIO_Port, P2_Pin);
+		uint8_t button_P3 = HAL_GPIO_ReadPin(P3_GPIO_Port, P3_Pin);
+		uint8_t button_P4 = HAL_GPIO_ReadPin(P4_GPIO_Port, P4_Pin);
+		
+		DisplayTime(); 
+
+	
+		if (button_P1 == GPIO_PIN_RESET) { 
+			if (auto_increment == 0) {
+				auto_increment = 1;
+			}
+			else auto_increment = 0;
+		}
+		if (auto_increment) {
+					UpdateTime();
+			}
+		if (button_P2 == GPIO_PIN_RESET) {
+				hours++; 
+				HAL_Delay(200);
+		}
+		if (button_P3 == GPIO_PIN_RESET) {
+				minutes++; 
+				HAL_Delay(200);
+		}
+		if (button_P4 == GPIO_PIN_RESET) {
+				seconds++;
+				HAL_Delay(200);
+		}
+	}
 }
 
 /**
