@@ -1,10 +1,10 @@
 --cpu Cortex-M3
 "bt\startup_stm32f207xx.o"
 "bt\myled.o"
+"bt\mylcd.o"
 "bt\main.o"
 "bt\stm32f2xx_it.o"
 "bt\stm32f2xx_hal_msp.o"
-"bt\mylcd.o"
 "bt\stm32f2xx_hal.o"
 "bt\stm32f2xx_hal_rcc.o"
 "bt\stm32f2xx_hal_rcc_ex.o"

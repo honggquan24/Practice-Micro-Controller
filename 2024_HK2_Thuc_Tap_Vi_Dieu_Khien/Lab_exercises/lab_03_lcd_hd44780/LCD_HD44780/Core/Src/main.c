@@ -64,46 +64,48 @@ static void MX_GPIO_Init(void);
   * @brief  The application entry point.
   * @retval int
   */
+int main(void)
+{
 
-uint8_t hours = 14;  
-uint8_t minutes = 3; 
-uint8_t seconds = 5; 
+  /* USER CODE BEGIN 1 */
 
-void DisplayTime(void) {
-    char timeString[16]; 
-    sprintf(timeString, "CLOCK: %02d:%02d:%02d", hours, minutes, seconds);
-    LCD_GotoXY(0, 0); 
-    LCD_PutString((uint8_t *)timeString); 
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  /* USER CODE BEGIN 2 */
+	LCD_Init(); 
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
+		LCD_GotoXY(0, 0); 
+		LCD_PutString((uint8_t *)"Vo Hong Quan"); 
+		LCD_GotoXY(0, 1); 
+		LCD_PutString((uint8_t *)"22134012"); 
+    /* USER CODE BEGIN 3 */
+  }
+  /* USER CODE END 3 */
 }
-
-void UpdateTime(void) {
-		HAL_Delay(1000); 
-    seconds++;
-    if (seconds >= 60) {
-        seconds = 0;
-        minutes++;
-        if (minutes >= 60) {
-            minutes = 0;
-            hours++;
-            if (hours >= 24) {
-                hours = 0;
-            }
-        }
-    }
-}
-
-int main(void) {
-    HAL_Init(); 
-    SystemClock_Config(); 
-    MX_GPIO_Init(); 
-    LCD_Init(); 
-
-    while (1) {
-        DisplayTime(); 
-        UpdateTime(); 
-    }
-}
-
 
 /**
   * @brief System Clock Configuration
